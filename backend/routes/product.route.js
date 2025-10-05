@@ -4,7 +4,9 @@ import {
   deleteProduct,
   getAllProducts,
   getFeaturedProducts,
+  getProductsByCategory,
   getRecommendations,
+  toggleFeaturedProduct,
 } from "../controllers/product.controller.js";
 import { adminRoute, protectRoute } from "../middlewares/auth.middleware.js";
 
