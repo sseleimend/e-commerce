@@ -190,26 +190,9 @@ export const refreshToken = async (req, res) => {
 
 export const profile = async (req, res) => {
   try {
-    const { accessToken } = req.cookies;
-    if (!accessToken) {
-      return res.status(401).json({
-        success: false,
-        message: "No access token provided",
-      });
-    }
-    const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
-
-    const user = await User.findById(decoded.userId).select("-password");
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
     res.status(200).json({
       success: true,
-      user,
+      user: req.user,
     });
   } catch (error) {
     res.status(500).json({
