@@ -68,7 +68,7 @@ export const signup = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "User registration failed",
+      message: error?.message ?? "User registration failed",
     });
   }
 };
