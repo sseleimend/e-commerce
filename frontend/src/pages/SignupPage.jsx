@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { UserPlus, Mail, Lock, User, ArrowRight, Loader } from "lucide-react";
 import { motion } from "framer-motion";
+import useUserStore from "../stores/useUserStore.js";
 
 function SignupPage() {
   const [formData, setFormData] = useState({
@@ -11,8 +12,7 @@ function SignupPage() {
     confirmPassword: "",
   });
 
-  const signup = () => {};
-  const loading = false;
+  const { signup, loading } = useUserStore();
 
   const handleSubmit = (e) => {
     e.preventDefault();
