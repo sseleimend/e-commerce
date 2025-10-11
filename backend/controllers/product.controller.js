@@ -76,12 +76,11 @@ export const deleteProduct = async (req, res) => {
 
     await Product.findByIdAndDelete(id);
 
+    await updateFeaturedProductsCache();
+
     res.status(200).json({ message: "Product deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting product" });
-  } finally {
-    // Invalidate featured products cache
-    await redis.del("featured_products");
   }
 };
 
@@ -118,11 +117,20 @@ export const toggleFeaturedProduct = async (req, res) => {
     }
     product.isFeatured = !product.isFeatured;
     await product.save();
+
+    await updateFeaturedProductsCache();
+
     res.status(200).json({ product });
   } catch (error) {
     res.status(500).json({ message: "Error toggling featured status" });
-  } finally {
-    // Invalidate featured products cache
-    await redis.del("featured_products");
   }
 };
+
+async function updateFeaturedProductsCache() {
+  try {
+    const featuredProducts = await Product.find({ isFeatured: true }).lean();
+    await redis.set("featured_products", JSON.stringify(featuredProducts));
+  } catch (error) {
+    console.error("Error updating featured products cache:", error);
+  }
+}
