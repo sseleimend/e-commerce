@@ -80,6 +80,7 @@ const useUserStore = create((set, get) => ({
       set({ user: null });
       throw error;
     }
+  },
 }));
 
 export default useUserStore;
