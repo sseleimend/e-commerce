@@ -86,6 +86,8 @@ export const createCheckoutSession = async (req, res) => {
 };
 
 async function createNewCoupon(userId) {
+  await Coupon.findOneAndDelete({ userId });
+
   const coupon = await Coupon.create({
     code: "GIFT" + Math.random().toString(36).substring(2, 8).toUpperCase(),
     discountPercentage: 10,
