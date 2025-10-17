@@ -10,7 +10,7 @@ export const createCheckoutSession = async (req, res) => {
       return res.status(400).json({ message: "No products provided" });
     }
 
-    const totalAmount = 0;
+    let totalAmount = 0;
 
     const lineItems = products.map((item) => {
       const amount = Math.round(item.price * 100); // Convert to cents
@@ -20,11 +20,12 @@ export const createCheckoutSession = async (req, res) => {
         price_data: {
           currency: "usd",
           product_data: {
-            name: item.name,
+            name: item.title,
             images: [item.image],
           },
           unit_amount: amount,
         },
+        quantity: item.quantity ?? 1,
       };
     });
 
@@ -73,7 +74,11 @@ export const createCheckoutSession = async (req, res) => {
       await createNewCoupon(req.user._id);
     }
 
-    res.status(200).json({ id: session.id, totalAmount: totalAmount / 100 });
+    res.status(200).json({
+      id: session.id,
+      url: session.url,
+      totalAmount: totalAmount / 100,
+    });
   } catch (error) {
     console.error("Error creating checkout session:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -138,6 +143,7 @@ export const checkoutSuccess = async (req, res) => {
       orderId: order._id,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
