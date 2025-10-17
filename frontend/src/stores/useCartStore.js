@@ -22,6 +22,24 @@ export const useCartStore = create((set, get) => ({
     }
   },
 
+  clearCart: async () => {
+    set({ loading: true });
+    try {
+      set({
+        cart: [],
+        loading: false,
+        total: 0,
+        subtotal: 0,
+        coupon: null,
+        isCouponApplied: false,
+      });
+      toast.success("Cart cleared!");
+    } catch {
+      toast.error("Failed to clear cart.");
+      set({ loading: false });
+    }
+  },
+
   addToCart: async (product) => {
     set({ loading: true });
     try {
